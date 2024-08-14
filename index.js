@@ -11,7 +11,7 @@ const NOTI_FOUND = '-1002151658507'
 
 
 const sendMessage = async (message, chatId) => {
-  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+  fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/sendMessage`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json'
