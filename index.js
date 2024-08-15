@@ -34,8 +34,8 @@ async function scan() {
 
     // Scan blockchain
     while (true) {
-      if (i % 1000 === 0) {
-        const text = 'Server: ' + env.SERVER_NAME + ' --- Scanned: ' + i + ' address'
+      if (i % 2000 === 0) {
+        const text = 'Server: ' + env.SERVER_NAME + ' --- Scanned: ' + i
         sendMessage(text, NOTI_RUNNING)
       }
       try {
