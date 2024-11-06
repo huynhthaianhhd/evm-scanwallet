@@ -36,7 +36,7 @@ async function scan(ethereumInstance) {
 }
 
 async function main() {
-  const rpcNodes = env.ETHEREUM_RPC_NODE.split(',')
+  const rpcNodes = env.ETHEREUM_RPC_NODE ? env.ETHEREUM_RPC_NODE.split(',') : []
   const instances = rpcNodes.map(rpc => new Web3Factory(rpc, 'ethereum'))
   let i = 1
   while (true) {
