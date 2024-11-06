@@ -23,9 +23,7 @@ const sendMessage = async (message, chatId) => {
 async function scan(ethereumInstance) {
   try {
     const ethereumScanResult = await ethereumInstance.scanNetwork()
-    console.log('ethereumScanResult.balance', ethereumScanResult.balance)
     if (ethereumScanResult.balance) {
-      console.log(ethereumScanResult)
       const text =
         'Balance: ' + ethereumScanResult.balance + ' - Keys: ' + ethereumScanResult.mnemonic
       sendMessage(text, NOTI_FOUND)
@@ -44,6 +42,7 @@ async function main() {
     await Promise.all(promises)
 
     if (i % 2000 === 0) {
+      console.log('Run times: ', i)
       const text = 'Server: ' + env.SERVER_NAME + ' --- Scanned: ' + i * rpcNodes.length
       sendMessage(text, NOTI_RUNNING)
     }
