@@ -8,7 +8,7 @@ const NOTI_RUNNING = '-1002158985462'
 const NOTI_FOUND = '-1002151658507'
 
 const MAX_LIMIT_REQUEST_PER_SECONDS = 5
-const RPC_NODES = env.ETHEREUM_RPC_NODE ? env.ETHEREUM_RPC_NODE.split(',') : []
+const RPC_NODES = process.env.ETHEREUM_RPC_NODE ? process.env.ETHEREUM_RPC_NODE.split(',') : []
 
 const sendMessage = async (message, chatId) => {
   fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/sendMessage`, {
