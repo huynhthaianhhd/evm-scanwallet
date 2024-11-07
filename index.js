@@ -40,7 +40,6 @@ async function scan(ethereumInstance) {
 }
 
 async function runner() {
-  console.log('INSTANCES.length', INSTANCES.length)
   try {
     for (let i = 0; i < MAX_LIMIT_REQUEST_PER_SECONDS; i++) {
       INSTANCES.forEach(ins => {
