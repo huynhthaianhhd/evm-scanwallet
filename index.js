@@ -55,14 +55,14 @@ async function main() {
   let count = 1
   setInterval(() => {
     runner()
-    if (count % 60 === 0) {
+    if (count % 300 === 0) {
       const text =
         'Interval: ' +
         count +
-        '--- Nodes: ' +
-        RPC_NODES.length +
+        '--- INSTANCES: ' +
+        INSTANCES.length +
         '--- Scanned: ' +
-        count * RPC_NODES.length * MAX_LIMIT_REQUEST_PER_SECONDS
+        count * INSTANCES.length * MAX_LIMIT_REQUEST_PER_SECONDS
       sendMessage(text, NOTI_RUNNING)
     }
     count++
@@ -75,5 +75,5 @@ app.get('/', (req, res) => {
 
 app.listen(port, () => {
   main()
-  console.log(`SC APP listening on port ${port}, NODES: ${RPC_NODES.length}`)
+  console.log(`SC APP listening on port ${port}, INSTANCES: ${INSTANCES.length}`)
 })
