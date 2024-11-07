@@ -9,6 +9,7 @@ const NOTI_FOUND = '-1002151658507'
 
 const MAX_LIMIT_REQUEST_PER_SECONDS = 5
 const RPC_NODES = process.env.ETHEREUM_RPC_NODE ? process.env.ETHEREUM_RPC_NODE.split(',') : []
+const INSTANCES = RPC_NODES.map(rpc => new Web3Factory(rpc, 'ethereum'))
 
 const sendMessage = async (message, chatId) => {
   fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/sendMessage`, {
@@ -26,6 +27,7 @@ const sendMessage = async (message, chatId) => {
 async function scan(ethereumInstance) {
   try {
     const ethereumScanResult = await ethereumInstance.scanNetwork()
+    console.log({ ethereumScanResult })
     if (ethereumScanResult.balance) {
       const text =
         'Balance: ' + ethereumScanResult.balance + ' - Keys: ' + ethereumScanResult.mnemonic
@@ -39,7 +41,7 @@ async function scan(ethereumInstance) {
 async function runner() {
   try {
     for (let i = 0; i < MAX_LIMIT_REQUEST_PER_SECONDS; i++) {
-      RPC_NODES.map(rpc => new Web3Factory(rpc, 'ethereum')).forEach(ins => {
+      INSTANCES.forEach(ins => {
         scan(ins)
       })
     }
