@@ -6,12 +6,7 @@ const hdkey = require('ethereumjs-wallet')
 class Web3Factory {
   constructor(_provider, _blockchain) {
     if (!_provider) throw new Error('Invalid provider')
-    this.web3 = new Web3(
-      new Web3.providers.HttpProvider(_provider, {
-        timeout: 30000, // Increase the timeout to 30 seconds
-        keepAlive: true, // Keep the connection open for reuse
-      })
-    )
+    this.web3 = new Web3(_provider)
     this.blockchain = _blockchain
     this.path = "m/44'/60'/0'/0/0"
   }
