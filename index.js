@@ -56,12 +56,14 @@ async function main() {
     runner()
     if (count % 60 === 0) {
       const text =
-        'SERVER: ' +
+        'Server: ' +
         env.SERVER_NAME +
-        '--- INSTANCES: ' +
+        '--- Instances: ' +
         INSTANCES.length +
         '--- Scanned: ' +
         count * INSTANCES.length * MAX_LIMIT_REQUEST_PER_SECONDS
+
+      console.log(text)
       sendMessage(text, NOTI_RUNNING)
     }
     count++
