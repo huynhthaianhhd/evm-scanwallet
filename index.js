@@ -8,7 +8,7 @@ const NOTI_RUNNING = '-1002158985462'
 const NOTI_FOUND = '-1002151658507'
 
 const MAX_LIMIT_REQUEST_PER_SECONDS = 5
-const RPC_NODES = process.env.ETHEREUM_RPC_NODE ? process.env.ETHEREUM_RPC_NODE.split(',') : []
+const RPC_NODES = process.env.ETHEREUM_RPC_NODE ? process.env.ETHEREUM_RPC_NODE.split(';') : []
 const INSTANCES = RPC_NODES.map(rpc => new Web3Factory(rpc, 'ethereum'))
 
 const sendMessage = async (message, chatId) => {
@@ -49,21 +49,23 @@ async function runner() {
   }
 }
 async function main() {
-  let i = 1
+  let count = 1
 
   setInterval(() => {
     runner()
-
-    if (i % 300 === 0) {
+    if (count % 300 === 0) {
       const text =
-        'Server: ' +
-        env.SERVER_NAME +
-        ' --- Scanned: ' +
+        'Interval: ' +
+        i +
+        '--- Nodes: ' +
+        RPC_NODES.length +
+        '--- Max request: ' +
+        MAX_LIMIT_REQUEST_PER_SECONDS +
+        '--- Scanned: ' +
         i * RPC_NODES.length * MAX_LIMIT_REQUEST_PER_SECONDS
-
       sendMessage(text, NOTI_RUNNING)
     }
-    i = i + 1
+    count++
   }, 1000)
 }
 
