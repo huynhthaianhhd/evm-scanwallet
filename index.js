@@ -49,7 +49,6 @@ async function runner() {
   }
 }
 async function main() {
-  sendMessage(`SC APP - START - NODES: ${RPC_NODES.length}`, NOTI_RUNNING)
   let count = 1
   setInterval(() => {
     runner()
@@ -74,6 +73,6 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`SC APP listening on port ${port}`)
   main()
+  console.log(`SC APP listening on port ${port}, NODES: ${RPC_NODES.length}`)
 })
