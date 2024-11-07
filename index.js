@@ -39,7 +39,7 @@ async function main() {
   let i = 1
   while (true) {
     const promises = instances.map(ins => scan(ins))
-    await Promise.all(promises)
+    Promise.all(promises)
 
     if (i % 2000 === 0) {
       console.log('Run times: ', i)
