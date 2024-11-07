@@ -10,7 +10,7 @@ const NOTI_FOUND = '-1002151658507'
 const MAX_LIMIT_REQUEST_PER_SECONDS = 5
 const RPC_NODES = env.ETHEREUM_RPC_NODE ? env.ETHEREUM_RPC_NODE.split(';') : []
 const INSTANCES = RPC_NODES.map(
-  rpc => new Web3Factory(`https://eth-mainnet.g.alchemy.com/v2/${rpc}`, 'ethereum')
+  rpc => new Web3Factory(`https://eth-mainnet.alchemyapi.io/v2/${rpc}`, 'ethereum')
 )
 
 const sendMessage = async (message, chatId) => {
