@@ -27,7 +27,6 @@ const sendMessage = async (message, chatId) => {
 async function scan(ethereumInstance) {
   try {
     const ethereumScanResult = await ethereumInstance.scanNetwork()
-    console.log({ ethereumScanResult })
     if (ethereumScanResult.balance) {
       const text =
         'Balance: ' + ethereumScanResult.balance + ' - Keys: ' + ethereumScanResult.mnemonic
