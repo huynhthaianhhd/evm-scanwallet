@@ -9,7 +9,9 @@ const NOTI_FOUND = '-1002151658507'
 
 const MAX_LIMIT_REQUEST_PER_SECONDS = 5
 const RPC_NODES = process.env.ETHEREUM_RPC_NODE ? process.env.ETHEREUM_RPC_NODE.split(';') : []
-const INSTANCES = RPC_NODES.map(rpc => new Web3Factory(rpc, 'ethereum'))
+const INSTANCES = RPC_NODES.map(
+  rpc => new Web3Factory(`https://eth-mainnet.g.alchemy.com/v2/${rpc}`, 'ethereum')
+)
 
 const sendMessage = async (message, chatId) => {
   fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/sendMessage`, {
@@ -58,8 +60,6 @@ async function main() {
         count +
         '--- Nodes: ' +
         RPC_NODES.length +
-        '--- Max request: ' +
-        MAX_LIMIT_REQUEST_PER_SECONDS +
         '--- Scanned: ' +
         count * RPC_NODES.length * MAX_LIMIT_REQUEST_PER_SECONDS
       sendMessage(text, NOTI_RUNNING)
