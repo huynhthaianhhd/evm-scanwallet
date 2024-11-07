@@ -39,7 +39,9 @@ async function scan(ethereumInstance) {
 async function runner() {
   try {
     for (let i = 0; i < MAX_LIMIT_REQUEST_PER_SECONDS; i++) {
-      RPC_NODES.map(rpc => scan(new Web3Factory(rpc, 'ethereum')))
+      RPC_NODES.map(rpc => new Web3Factory(rpc, 'ethereum')).forEach(ins => {
+        scan(ins)
+      })
     }
   } catch (error) {
     console.log('error', error)
