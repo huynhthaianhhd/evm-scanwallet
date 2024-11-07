@@ -49,8 +49,8 @@ async function runner() {
   }
 }
 async function main() {
+  sendMessage(`SC APP - START - NODES: ${RPC_NODES.length}`, NOTI_RUNNING)
   let count = 1
-
   setInterval(() => {
     runner()
     if (count % 300 === 0) {
@@ -75,10 +75,5 @@ app.get('/', (req, res) => {
 
 app.listen(port, () => {
   console.log(`SC APP listening on port ${port}`)
-  sendMessage(`SC APP - START - NODES: ${RPC_NODES.length}`, NOTI_RUNNING)
-  try {
-    main()
-  } catch (error) {
-    console.log('error', error)
-  }
+  main()
 })
