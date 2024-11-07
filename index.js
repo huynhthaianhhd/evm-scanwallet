@@ -72,7 +72,8 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`SC APP listening on port ${port}`)
+  sendMessage(`SC APP - START`, NOTI_RUNNING)
   try {
     main()
   } catch (error) {
