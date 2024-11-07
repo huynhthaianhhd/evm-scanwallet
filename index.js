@@ -55,13 +55,13 @@ async function main() {
     if (count % 60 === 0) {
       const text =
         'Interval: ' +
-        i +
+        count +
         '--- Nodes: ' +
         RPC_NODES.length +
         '--- Max request: ' +
         MAX_LIMIT_REQUEST_PER_SECONDS +
         '--- Scanned: ' +
-        i * RPC_NODES.length * MAX_LIMIT_REQUEST_PER_SECONDS
+        count * RPC_NODES.length * MAX_LIMIT_REQUEST_PER_SECONDS
       sendMessage(text, NOTI_RUNNING)
     }
     count++
