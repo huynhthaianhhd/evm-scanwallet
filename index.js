@@ -73,7 +73,7 @@ app.get('/', (req, res) => {
 
 app.listen(port, () => {
   console.log(`SC APP listening on port ${port}`)
-  sendMessage(`SC APP - START`, NOTI_RUNNING)
+  sendMessage(`SC APP - START - NODES: ${RPC_NODES.length}`, NOTI_RUNNING)
   try {
     main()
   } catch (error) {
