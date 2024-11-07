@@ -7,6 +7,9 @@ const port = process.env.PORT || 4000
 const NOTI_RUNNING = '-1002158985462'
 const NOTI_FOUND = '-1002151658507'
 
+const MAX_LIMIT_REQUEST_PER_SECONDS = 5
+const RPC_NODES = env.ETHEREUM_RPC_NODE ? env.ETHEREUM_RPC_NODE.split(',') : []
+
 const sendMessage = async (message, chatId) => {
   fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/sendMessage`, {
     method: 'POST',
@@ -33,22 +36,32 @@ async function scan(ethereumInstance) {
   }
 }
 
+async function runner() {
+  try {
+    for (let i = 0; i < MAX_LIMIT_REQUEST_PER_SECONDS; i++) {
+      RPC_NODES.map(rpc => scan(new Web3Factory(rpc, 'ethereum')))
+    }
+  } catch (error) {
+    console.log('error', error)
+  }
+}
 async function main() {
-  const rpcNodes = env.ETHEREUM_RPC_NODE ? env.ETHEREUM_RPC_NODE.split(',') : []
-  const instances = rpcNodes.map(rpc => new Web3Factory(rpc, 'ethereum'))
   let i = 1
-  while (true) {
-    const promises = instances.map(ins => scan(ins))
-    Promise.all(promises)
 
-    if (i % 2000 === 0) {
-      console.log('Run times: ', i)
-      const text = 'Server: ' + env.SERVER_NAME + ' --- Scanned: ' + i * rpcNodes.length
+  setInterval(() => {
+    runner()
+
+    if (i % 300 === 0) {
+      const text =
+        'Server: ' +
+        env.SERVER_NAME +
+        ' --- Scanned: ' +
+        i * RPC_NODES.length * MAX_LIMIT_REQUEST_PER_SECONDS
+
       sendMessage(text, NOTI_RUNNING)
     }
-
     i = i + 1
-  }
+  }, 1000)
 }
 
 app.get('/', (req, res) => {
@@ -57,7 +70,6 @@ app.get('/', (req, res) => {
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
-
   try {
     main()
   } catch (error) {
