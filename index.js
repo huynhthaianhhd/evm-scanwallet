@@ -54,7 +54,7 @@ async function main() {
   let count = 1
   setInterval(() => {
     runner()
-    if (count % 60 === 0) {
+    if (count % 300 === 0) {
       const text =
         'Server: ' +
         env.SERVER_NAME +
