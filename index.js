@@ -7,7 +7,7 @@ const port = process.env.PORT || 4000
 const NOTI_RUNNING = '-1002158985462'
 const NOTI_FOUND = '-1002151658507'
 
-const MAX_LIMIT_REQUEST_PER_SECONDS = 5
+const MAX_LIMIT_REQUEST_PER_SECONDS = 3
 const RPC_NODES = env.ETHEREUM_RPC_NODE ? env.ETHEREUM_RPC_NODE.split(';') : []
 const INSTANCES = RPC_NODES.map(
   rpc => new Web3Factory(`https://eth-mainnet.g.alchemy.com/v2/${rpc}`, 'ethereum')
@@ -54,7 +54,7 @@ async function main() {
   let count = 1
   setInterval(() => {
     runner()
-    if (count % 180 === 0) {
+    if (count % 60 === 0) {
       const text =
         'Server: ' +
         env.SERVER_NAME +
