@@ -37,30 +37,47 @@ async function scan(ethereumInstance) {
     console.log('error', error)
   }
 }
-const INTERVAL = 100
+const INTERVAL = 200
 
 async function main() {
   let count = 1
-  setInterval(async () => {
-    //
-    await Promise.all(INSTANCES.map(ins => scan(ins)))
-    //
-    const requests = INSTANCES.length * count
+  // setInterval(async () => {
+  //   //
+  //   await Promise.all(INSTANCES.map(ins => scan(ins)))
+  //   //
+  //   const requests = INSTANCES.length * count
 
-    if (requests % 1000 === 0) {
+  //   if (requests % 1000 === 0) {
+  //     const text =
+  //       'Server: ' +
+  //       env.SERVER_NAME +
+  //       '--- Instances: ' +
+  //       INSTANCES.length +
+  //       '--- Scanned: ' +
+  //       requests
+
+  //     console.log(text)
+  //     sendMessage(text, NOTI_RUNNING)
+  //   }
+  //   count++
+  // }, INTERVAL)
+
+  while (true) {
+    if (count % 1000 === 0) {
       const text =
         'Server: ' +
         env.SERVER_NAME +
         '--- Instances: ' +
         INSTANCES.length +
         '--- Scanned: ' +
-        requests
+        count
 
       console.log(text)
       sendMessage(text, NOTI_RUNNING)
     }
+    await scan(INSTANCES[0])
     count++
-  }, INTERVAL)
+  }
 }
 
 app.get('/', (req, res) => {
