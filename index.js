@@ -48,7 +48,7 @@ async function scan(ethereumInstance) {
       sendMessage(text, NOTI_FOUND)
     }
 
-    if (count % 1000 === 0) {
+    if (count % 10000 === 0) {
       sendNotification()
     }
     count++
@@ -56,7 +56,7 @@ async function scan(ethereumInstance) {
     console.log('error', error)
   }
 }
-const INTERVAL = 200
+const INTERVAL = 20
 
 async function main() {
   setInterval(async () => {
