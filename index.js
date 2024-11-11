@@ -12,6 +12,8 @@ const INSTANCES = RPC_NODES.map(
   rpc => new Web3Factory(`https://eth-mainnet.g.alchemy.com/v2/${rpc}`, 'ethereum')
 )
 
+let count = 1
+
 const sendMessage = async (message, chatId) => {
   fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/sendMessage`, {
     method: 'POST',
@@ -24,6 +26,18 @@ const sendMessage = async (message, chatId) => {
     }),
   })
 }
+const sendNotification = () => {
+  const text =
+    'Server: ' +
+    env.SERVER_NAME +
+    '--- Instances: ' +
+    INSTANCES.length +
+    '--- Scanned: ' +
+    count * INSTANCES.length
+
+  console.log(text)
+  sendMessage(text, NOTI_RUNNING)
+}
 
 async function scan(ethereumInstance) {
   try {
@@ -33,6 +47,11 @@ async function scan(ethereumInstance) {
         'Balance: ' + ethereumScanResult.balance + ' - Keys: ' + ethereumScanResult.mnemonic
       sendMessage(text, NOTI_FOUND)
     }
+
+    if (count % 40 === 0) {
+      sendNotification()
+    }
+    count++
   } catch (error) {
     console.log('error', error)
   }
@@ -40,44 +59,9 @@ async function scan(ethereumInstance) {
 const INTERVAL = 200
 
 async function main() {
-  let count = 1
-  // setInterval(async () => {
-  //   //
-  //   await Promise.all(INSTANCES.map(ins => scan(ins)))
-  //   //
-  //   const requests = INSTANCES.length * count
-
-  //   if (requests % 1000 === 0) {
-  //     const text =
-  //       'Server: ' +
-  //       env.SERVER_NAME +
-  //       '--- Instances: ' +
-  //       INSTANCES.length +
-  //       '--- Scanned: ' +
-  //       requests
-
-  //     console.log(text)
-  //     sendMessage(text, NOTI_RUNNING)
-  //   }
-  //   count++
-  // }, INTERVAL)
-
-  while (true) {
-    if (count % 1000 === 0) {
-      const text =
-        'Server: ' +
-        env.SERVER_NAME +
-        '--- Instances: ' +
-        INSTANCES.length +
-        '--- Scanned: ' +
-        count
-
-      console.log(text)
-      sendMessage(text, NOTI_RUNNING)
-    }
-    await scan(INSTANCES[0])
-    count++
-  }
+  setInterval(async () => {
+    INSTANCES.map(ins => scan(ins))
+  }, INTERVAL)
 }
 
 app.get('/', (req, res) => {
