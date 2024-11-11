@@ -37,20 +37,16 @@ async function scan(ethereumInstance) {
     console.log('error', error)
   }
 }
+const INTERVAL = 100
 
-async function runner() {
-  try {
-    INSTANCES.forEach(ins => {
-      scan(ins)
-    })
-  } catch (error) {
-    console.log('error', error)
-  }
-}
 async function main() {
   let count = 1
-  while (true) {
-    const requests = count * INSTANCES.length
+  setInterval(async () => {
+    //
+    await Promise.all(INSTANCES.map(ins => scan(ins)))
+    //
+    const requests = INSTANCES.length * count
+
     if (requests % 1000 === 0) {
       const text =
         'Server: ' +
@@ -63,11 +59,8 @@ async function main() {
       console.log(text)
       sendMessage(text, NOTI_RUNNING)
     }
-
-    const promises = INSTANCES.map(ins => scan(ins))
-    await Promise.all(promises)
     count++
-  }
+  }, INTERVAL)
 }
 
 app.get('/', (req, res) => {
