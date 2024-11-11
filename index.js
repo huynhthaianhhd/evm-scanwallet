@@ -48,7 +48,7 @@ async function scan(ethereumInstance) {
       sendMessage(text, NOTI_FOUND)
     }
 
-    if (count % 40 === 0) {
+    if (count % 1000 === 0) {
       sendNotification()
     }
     count++
