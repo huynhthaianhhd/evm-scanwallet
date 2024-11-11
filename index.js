@@ -41,19 +41,17 @@ async function scan(ethereumInstance) {
 
 async function runner() {
   try {
-    for (let i = 0; i < MAX_LIMIT_REQUEST_PER_SECONDS; i++) {
-      INSTANCES.forEach(ins => {
-        scan(ins)
-      })
-    }
+    INSTANCES.forEach(ins => {
+      scan(ins)
+    })
   } catch (error) {
     console.log('error', error)
   }
 }
 async function main() {
   let count = 1
-  setInterval(() => {
-    runner()
+  setInterval(async () => {
+    await runner()
     if (count % 300 === 0) {
       const text =
         'Server: ' +
@@ -67,7 +65,7 @@ async function main() {
       sendMessage(text, NOTI_RUNNING)
     }
     count++
-  }, 1000)
+  }, 300)
 }
 
 app.get('/', (req, res) => {
