@@ -56,7 +56,7 @@ async function scan(ethereumInstance) {
     console.log('error', error)
   }
 }
-const INTERVAL = 3000
+const INTERVAL = 2000
 
 async function main() {
   setInterval(async () => {
